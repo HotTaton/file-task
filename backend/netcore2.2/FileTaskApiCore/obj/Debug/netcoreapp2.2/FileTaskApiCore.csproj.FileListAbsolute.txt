@@ -1,0 +1,16 @@
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\bin\Debug\netcoreapp2.2\appsettings.Development.json
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\bin\Debug\netcoreapp2.2\appsettings.json
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\bin\Debug\netcoreapp2.2\Properties\launchSettings.json
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\bin\Debug\netcoreapp2.2\FileTaskApiCore.deps.json
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\bin\Debug\netcoreapp2.2\FileTaskApiCore.runtimeconfig.json
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\bin\Debug\netcoreapp2.2\FileTaskApiCore.runtimeconfig.dev.json
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\bin\Debug\netcoreapp2.2\FileTaskApiCore.dll
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\bin\Debug\netcoreapp2.2\FileTaskApiCore.pdb
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\obj\Debug\netcoreapp2.2\FileTaskApiCore.csprojAssemblyReference.cache
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\obj\Debug\netcoreapp2.2\FileTaskApiCore.RazorAssemblyInfo.cache
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\obj\Debug\netcoreapp2.2\FileTaskApiCore.RazorAssemblyInfo.cs
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\obj\Debug\netcoreapp2.2\FileTaskApiCore.AssemblyInfoInputs.cache
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\obj\Debug\netcoreapp2.2\FileTaskApiCore.AssemblyInfo.cs
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\obj\Debug\netcoreapp2.2\FileTaskApiCore.RazorTargetAssemblyInfo.cache
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\obj\Debug\netcoreapp2.2\FileTaskApiCore.dll
+C:\Users\veefo\source\repos\file-task\backend\netcore2.2\FileTaskApiCore\obj\Debug\netcoreapp2.2\FileTaskApiCore.pdb
