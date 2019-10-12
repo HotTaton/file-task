@@ -59,8 +59,10 @@ export class DynamicDataSource {
       }
 
       if (expand) {
-        const nodes = children.map(item =>
-          new DynamicFlatNode(item, node.level + 1, item.isExpandable));
+        const nodes = children
+          .sort(this.compareTreeNodes)
+          .map(item => new DynamicFlatNode(item, node.level + 1, item.isExpandable));
+          
         this.data.splice(index + 1, 0, ...nodes);
       } else {
         let count = 0;
@@ -77,6 +79,26 @@ export class DynamicDataSource {
       node.isLoading = false;
       console.error(error);
     });
+  }
+
+  /**
+   * Compare two tree elements
+   * @param a - first element
+   * @param b - second element
+   */
+  private compareTreeNodes(a: FileInfo, b: FileInfo): number {
+    if (a.isDirectory && !b.isDirectory) { //first, sorting by file type (directory on the top)
+      return -1;
+    } else if (!a.isDirectory && b.isDirectory) {
+      return 1;
+    } else {
+      if (a.name.toUpperCase() > b.name.toUpperCase()) { //if both have same file, sort by name (asc)
+        return 1;
+      } else if (a.name.toUpperCase() < b.name.toUpperCase()) {
+        return -1;
+      }
+      return 0;
+    }
   }
 
   initialData() {

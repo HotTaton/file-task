@@ -1,0 +1,16 @@
+<form [formGroup]="mainForm" class="main-form">
+    <mat-form-field class="input-control">
+      <input matInput placeholder="Имя базы данных" [value]="this.selectedFile != null ? this.selectedFile.formattedName : ''">
+    </mat-form-field>
+  
+    <div class="block-file-info">
+        <mat-form-field class="input-control">
+            <input matInput placeholder="Путь к файлу" formControlName="fileNameControl" [value]="this.selectedFile != null ? this.selectedFile.name : ''">
+        </mat-form-field>
+        <button mat-raised-button class="button-more" (click)="openDialog()">
+            <mat-icon>more_horiz</mat-icon>
+        </button>
+    </div>
+
+    <button mat-flat-button color="primary" (click)="loadFile()">Показать результат</button>
+</form>

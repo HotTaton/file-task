@@ -1,0 +1,20 @@
+.main-form {
+    margin-left: 10px;
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.input-control {
+    width: 100%;
+}
+
+.block-file-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-more {
+    margin-left: 10px;
+    align-self: center;
+}

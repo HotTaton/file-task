@@ -1,5 +1,6 @@
 ﻿using FileTaskApiCore.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace FileTaskApiCore.Models
@@ -16,6 +17,11 @@ namespace FileTaskApiCore.Models
         /// </summary>
         private const string INITIAL_PATH = @"C:/";
 
+        /// <summary>
+        /// Разделитель
+        /// </summary>
+        private const string DELIMITER = "\t";
+
         public FileViewModel GetFileTree(string path = INITIAL_PATH)
         {
             var rootDirectory = new DirectoryInfo(path); //TODO: add check is directory & is exist & not system & not hidden
@@ -23,6 +29,40 @@ namespace FileTaskApiCore.Models
             FileViewModel result = null;
 
             PopulateTree(rootDirectory, ref result, 0);
+
+            return result;
+        }
+
+        public IEnumerable<IEnumerable<string>> ReadFileData(string fileName)
+        {
+            LinkedList<LinkedList<string>> result = new LinkedList<LinkedList<string>>();
+            
+            try
+            {
+                if (File.Exists(fileName))
+                {
+                    using (StreamReader sr = new StreamReader(fileName))
+                    {
+                        while (!sr.EndOfStream)
+                        {
+                            var data = sr.ReadLine().Split(DELIMITER);
+
+                            var newRow = new LinkedList<string>();
+
+                            foreach (var s in data)
+                            {
+                                newRow.AddLast(s);
+                            }
+
+                            result.AddLast(newRow);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
 
             return result;
         }

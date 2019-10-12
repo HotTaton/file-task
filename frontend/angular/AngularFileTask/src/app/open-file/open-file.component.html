@@ -1,18 +1,32 @@
-<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-    <button mat-icon-button disabled></button>
-    {{node.item.formattedName}}
-  </mat-tree-node>
-  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-    <button mat-icon-button
-            [attr.aria-label]="'toggle ' + node.item.formattedName" matTreeNodeToggle>
-      <mat-icon class="mat-icon-rtl-mirror">
-        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-      </mat-icon>
-    </button>
-    {{node.item.formattedName}}
-    <mat-progress-bar *ngIf="node.isLoading"
-                      mode="indeterminate"
-                      class="tree-progress-bar"></mat-progress-bar>
-  </mat-tree-node>
-</mat-tree>
+
+<h1 mat-dialog-title>Выберите файл:</h1>
+
+<div mat-dialog-content>   
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+      <button mat-icon-button disabled></button>
+      <button mat-button (click)="selectNode(node.item)" [color]="isSelected(node.item)">
+        {{node.item.formattedName}}
+      </button>
+    </mat-tree-node>
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+      <button mat-icon-button
+              [attr.aria-label]="'toggle ' + node.item.formattedName" matTreeNodeToggle>
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+      </button>
+      {{node.item.formattedName}}      
+      <mat-progress-bar *ngIf="node.isLoading"
+                        mode="indeterminate"
+                        class="tree-progress-bar"></mat-progress-bar>
+    </mat-tree-node>
+  </mat-tree>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Отмена</button>
+  <button mat-stroked-button (click)="onOkClick()" cdkFocusInitial color="primary">Выбрать</button>
+</div>
+
+

@@ -1,6 +1,7 @@
 ﻿using FileTaskApiCore.Models;
 using FileTaskApiCore.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace FileTaskApiCore.Controllers
 {
@@ -20,6 +21,12 @@ namespace FileTaskApiCore.Controllers
         public ActionResult<FileViewModel> GetDirectory([FromBody] string directoryPath)
         {
             return new JsonResult(_model.GetFileTree(directoryPath));
+        }
+
+        [HttpPost("[action]")]
+        public ActionResult<IEnumerable<IEnumerable<string>>> OpenFile([FromBody] string filePath)
+        {
+            return new JsonResult(_model.ReadFileData(filePath));
         }
     }
 }
