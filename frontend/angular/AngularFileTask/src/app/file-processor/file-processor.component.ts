@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { OpenFileComponent } from '../open-file/open-file.component';
-import { Overlay } from '@angular/cdk/overlay';
 import { FileInfo } from '../contracts/file/file-info';
 
 @Component({
@@ -13,10 +12,9 @@ import { FileInfo } from '../contracts/file/file-info';
 export class FileProcessorComponent implements OnInit {
 
   public selectedFile: FileInfo = null;
-  private selectedFileName: string;
 
   mainForm = new FormGroup({
-    fileNameControl: new FormControl(this.selectedFileName, Validators.required)
+    fileNameControl: new FormControl("", null)
   });
 
   constructor(private dialog: MatDialog) { }
@@ -39,12 +37,7 @@ export class FileProcessorComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result != null && result !== undefined) {
         this.selectedFile = result.selectedFile;
-        this.selectedFileName = this.selectedFile.name;
       }
     });
-  }
-
-  loadFile(): void {
-    
   }
 }

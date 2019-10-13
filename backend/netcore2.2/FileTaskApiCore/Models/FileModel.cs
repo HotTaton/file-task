@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace FileTaskApiCore.Models
 {
@@ -39,9 +40,9 @@ namespace FileTaskApiCore.Models
             
             try
             {
-                if (File.Exists(fileName))
+                //if (File.Exists(fileName))
                 {
-                    using (StreamReader sr = new StreamReader(fileName))
+                    using (StreamReader sr = new StreamReader(fileName.Trim((char)8234)))
                     {
                         while (!sr.EndOfStream)
                         {
@@ -59,9 +60,36 @@ namespace FileTaskApiCore.Models
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
 
+            }
+
+            return result;
+        }
+
+        public string SaveData(SaveFileViewModel file)
+        {
+            string result = "OK!";
+            try
+            {
+                //if (File.Exists(file.FileName))
+                {
+                    using (StreamWriter sr = new StreamWriter(file.FileName.Trim((char)8234)))
+                    {
+                        var content = new StringBuilder();
+                        foreach(var fileRow in file.Content)
+                        {
+                            content.AppendLine(string.Join(DELIMITER, fileRow));
+                        }
+
+                        sr.Write(content.ToString());
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result = "Error!";
             }
 
             return result;

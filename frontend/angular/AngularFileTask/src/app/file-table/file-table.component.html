@@ -1,1 +1,40 @@
-<p>file-table works!</p>
+<div *ngIf="fileContent">
+    <p-table [columns]="fileContent.header" [value]="fileContent.data">
+
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let colName of columns">
+                    {{colName}}
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr class="table-rows">
+                <td pEditableColumn *ngFor="let col of columns; index as i">
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input matInput [(ngModel)]="fileContent.content[fileContent.content.indexOf(rowData)][i]">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{rowData[i]}}
+                        </ng-template>
+                    </p-cellEditor> 
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:center">
+                <button mat-button (click)="addRow()">
+                    <mat-icon>add</mat-icon>    
+                </button>                    
+            </div>
+        </ng-template>  
+
+    </p-table>
+
+    <button mat-raised-button color="primary" (click)="saveData()" class="button-save">
+        Сохранить
+    </button>
+</div>

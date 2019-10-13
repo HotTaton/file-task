@@ -11,6 +11,5 @@
             <mat-icon>more_horiz</mat-icon>
         </button>
     </div>
-
-    <button mat-flat-button color="primary" (click)="loadFile()">Показать результат</button>
+    <app-file-table *ngIf="selectedFile" [file]="selectedFile"></app-file-table>
 </form>

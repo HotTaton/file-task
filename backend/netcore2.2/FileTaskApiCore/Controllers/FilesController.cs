@@ -28,5 +28,11 @@ namespace FileTaskApiCore.Controllers
         {
             return new JsonResult(_model.ReadFileData(filePath));
         }
+
+        [HttpPost("[action]")]
+        public ActionResult<string> SaveFile([FromBody] SaveFileViewModel file)
+        {
+            return new JsonResult(_model.SaveData(file));
+        }
     }
 }

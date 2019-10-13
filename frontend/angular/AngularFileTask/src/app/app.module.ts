@@ -9,7 +9,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http'; 
 import { MatButtonModule } from '@angular/material/button';
 import { FileProcessorComponent } from './file-processor/file-processor.component';
@@ -18,13 +18,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-
+import { TableModule } from 'primeng/table';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   imports: [
     HttpClientModule,
     BrowserModule,
     ReactiveFormsModule,
+    FormsModule,
     BrowserAnimationsModule,
     MatTreeModule,
     MatIconModule,
@@ -34,6 +36,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatFormFieldModule,
     MatDialogModule,
     MatButtonToggleModule,
+    TableModule,
+    MatSnackBarModule,
     RouterModule.forRoot([
       { path: '', component: FileProcessorComponent, pathMatch: 'full' }
     ])
