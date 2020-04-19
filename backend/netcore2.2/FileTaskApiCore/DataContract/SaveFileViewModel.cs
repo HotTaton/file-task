@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FileTaskApiCore.ViewModels
+namespace FileTaskApiCore.DataContract
 {
     public class SaveFileViewModel 
     {

@@ -1,5 +1,5 @@
-﻿using FileTaskApiCore.Models;
-using FileTaskApiCore.ViewModels;
+﻿using FileTaskApiCore.Services;
+using FileTaskApiCore.DataContract;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -9,30 +9,30 @@ namespace FileTaskApiCore.Controllers
     [ApiController]
     public class FilesController : ControllerBase
     {
-        private FileModel _model = new FileModel();
+        private FileService _fileService = new FileService();
 
         [HttpGet("[action]")]
         public ActionResult<FileViewModel> RootDirectory()
         {
-            return new JsonResult(_model.GetFileTree());
+            return new JsonResult(_fileService.GetFileTree());
         }
 
         [HttpPost("[action]")]
         public ActionResult<FileViewModel> GetDirectory([FromBody] string directoryPath)
         {
-            return new JsonResult(_model.GetFileTree(directoryPath));
+            return new JsonResult(_fileService.GetFileTree(directoryPath));
         }
 
         [HttpPost("[action]")]
         public ActionResult<IEnumerable<IEnumerable<string>>> OpenFile([FromBody] string filePath)
         {
-            return new JsonResult(_model.ReadFileData(filePath));
+            return new JsonResult(_fileService.ReadFileData(filePath));
         }
 
         [HttpPost("[action]")]
         public ActionResult<string> SaveFile([FromBody] SaveFileViewModel file)
         {
-            return new JsonResult(_model.SaveData(file));
+            return new JsonResult(_fileService.SaveData(file));
         }
     }
 }
