@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "iKFYiCBw7Ap0wRkYtahOjo9Qo4f1f9yeftn3FFU/TQxJvyPIfp50vVhhKQ7opfrgWoC2tPHigtFaGK4ERIkEPw==",
+  "dgSpecHash": "rM2tQDgMSa4ij69mQ7SC8RoxTYrgXCijr5M2hjg6PEv3bdHgpckhkWH2NocdTfsmZkEWVSJDF+G3t1RpdN32JA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\veefo\\Source\\Repos\\HotTaton\\file-task\\backend\\netcore2.2\\FileTaskApiCore\\FileTaskApiCore.csproj",
+  "projectFilePath": "C:\\Users\\veefo\\Source\\Repos\\HotTaton\\file-task\\backend\\netcore3.1\\FileTaskApiCore\\FileTaskApiCore.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\veefo\\.nuget\\packages\\microsoft.codeanalysis.fxcopanalyzers\\2.9.8\\microsoft.codeanalysis.fxcopanalyzers.2.9.8.nupkg.sha512",
     "C:\\Users\\veefo\\.nuget\\packages\\microsoft.codeanalysis.versioncheckanalyzer\\2.9.8\\microsoft.codeanalysis.versioncheckanalyzer.2.9.8.nupkg.sha512",

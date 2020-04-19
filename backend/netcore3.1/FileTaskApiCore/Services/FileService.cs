@@ -7,14 +7,25 @@ using System.Threading.Tasks;
 
 namespace FileTaskApiCore.Services
 {
-    public class FileService
+    public class FileService : IFileService
     {
-        class StackNode
+        /// <summary>
+        /// Вспомогательный класс для работы стека
+        /// </summary>
+        private class StackNode
         {
+            /// <summary>
+            /// Текущий уровень обхода
+            /// </summary>
             public int Level { get; set; }
+            /// <summary>
+            /// Текущий объект файловой системы
+            /// </summary>
             public FileSystemInfo Item { get; set; }
+            /// <summary>
+            /// Родительская сущность
+            /// </summary>
             public FileViewModel Parent { get; set; }
-            public bool Skip { get; set; }
         }
 
         /// <summary>
@@ -32,8 +43,14 @@ namespace FileTaskApiCore.Services
         /// </summary>
         private const string DELIMITER = "\t";
 
+        /// <inheritdoc/>
+        public FileViewModel GetRootDirectory()
+        {
+            return GetFileTree(INITIAL_PATH_CONST);
+        }
 
-        public FileViewModel GetFileTree(string path = INITIAL_PATH_CONST)
+        /// <inheritdoc/>
+        public FileViewModel GetFileTree(string path)
         {
             var treeStack = new Stack<StackNode>();
             var rootDirectory = new DirectoryInfo(path); //TODO: add check is directory & is exist & not system & not hidden            
@@ -55,8 +72,8 @@ namespace FileTaskApiCore.Services
                     };
                 }
                 catch (Exception e)
-                { 
-                    continue; 
+                {
+                    continue;
                 }
 
                 if (directory != null && currentNode.Level <= MAX_LOAD_DEPTH)
@@ -90,6 +107,7 @@ namespace FileTaskApiCore.Services
             return rootItem;
         }
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<IEnumerable<string>>> ReadFileData(string fileName)
         {
             LinkedList<LinkedList<string>> result = new LinkedList<LinkedList<string>>();
@@ -131,6 +149,7 @@ namespace FileTaskApiCore.Services
             return result;
         }
 
+        /// <inheritdoc/>
         public async Task<string> SaveData(SaveFileViewModel file)
         {
             string result = "OK!";
@@ -156,12 +175,6 @@ namespace FileTaskApiCore.Services
             }
 
             return result;
-        }
-
-        private void PopulateTree()
-        {
-
-
         }
     }
 }

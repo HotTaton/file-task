@@ -446,11 +446,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\veefo\\Source\\Repos\\HotTaton\\file-task\\backend\\netcore2.2\\FileTaskApiCore\\FileTaskApiCore.csproj",
+      "projectUniqueName": "C:\\Users\\veefo\\Source\\Repos\\HotTaton\\file-task\\backend\\netcore3.1\\FileTaskApiCore\\FileTaskApiCore.csproj",
       "projectName": "FileTaskApiCore",
-      "projectPath": "C:\\Users\\veefo\\Source\\Repos\\HotTaton\\file-task\\backend\\netcore2.2\\FileTaskApiCore\\FileTaskApiCore.csproj",
+      "projectPath": "C:\\Users\\veefo\\Source\\Repos\\HotTaton\\file-task\\backend\\netcore3.1\\FileTaskApiCore\\FileTaskApiCore.csproj",
       "packagesPath": "C:\\Users\\veefo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\veefo\\Source\\Repos\\HotTaton\\file-task\\backend\\netcore2.2\\FileTaskApiCore\\obj\\",
+      "outputPath": "C:\\Users\\veefo\\Source\\Repos\\HotTaton\\file-task\\backend\\netcore3.1\\FileTaskApiCore\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\veefo\\AppData\\Roaming\\NuGet\\NuGet.Config",

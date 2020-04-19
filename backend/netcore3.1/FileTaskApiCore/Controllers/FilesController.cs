@@ -9,12 +9,14 @@ namespace FileTaskApiCore.Controllers
     [ApiController]
     public class FilesController : ControllerBase
     {
-        private FileService _fileService = new FileService();
+        private readonly IFileService _fileService;
+
+        public FilesController(IFileService fileService) => _fileService = fileService;
 
         [HttpGet("[action]")]
         public ActionResult<FileViewModel> RootDirectory()
         {
-            return new JsonResult(_fileService.GetFileTree());
+            return new JsonResult(_fileService.GetRootDirectory());
         }
 
         [HttpPost("[action]")]
