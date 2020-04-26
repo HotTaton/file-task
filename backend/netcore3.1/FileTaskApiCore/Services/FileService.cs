@@ -181,8 +181,7 @@ namespace FileTaskApiCore.Services
             try
             {
                 if (!string.IsNullOrWhiteSpace(fileName) 
-                    && File.Exists(fileName) 
-                    && File.GetAttributes(fileName).HasFlag(FileAttributes.Normal))
+                    && File.Exists(fileName))
                 {
                     using StreamReader sr = new StreamReader(fileName);
                     while (!sr.EndOfStream)
@@ -232,8 +231,7 @@ namespace FileTaskApiCore.Services
             {
                 if (file != null 
                     && !string.IsNullOrWhiteSpace(file.FileName) 
-                    && File.Exists(file.FileName) 
-                    && File.GetAttributes(file.FileName).HasFlag(FileAttributes.Normal))                
+                    && File.Exists(file.FileName))                
                 {
                     using StreamWriter sr = new StreamWriter(file.FileName);
                     var content = new StringBuilder();

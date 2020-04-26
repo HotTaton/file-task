@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators'
 import { FileContent } from 'src/app/contracts/file/file-content';
+import { ServiceResponse } from 'src/app/contracts/response';
 
 @Injectable({
   providedIn: 'root'
@@ -26,10 +27,10 @@ constructor(private httpClient: HttpClient) { }
   public loadFile(file: FileInfo) : Observable<FileContent> {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
 
-    return this.httpClient.post<string[][]>("/files/OpenFile", `"${file.name.replace(/\\/g, "/")}"`, config).pipe(map(FileContent.createInstance));
+    return this.httpClient.post<FileContent>("/files/OpenFile", `"${file.name.replace(/\\/g, "/")}"`, config).pipe(map(FileContent.createInstance));
   }
 
-  public saveFile(fileName: FileInfo, data: FileContent) : Observable<string> {
+  public saveFile(fileName: FileInfo, data: FileContent) : Observable<boolean> {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
 
     const body = {
@@ -37,6 +38,6 @@ constructor(private httpClient: HttpClient) { }
       content: data.content
     };
 
-    return this.httpClient.post<string>("/files/SaveFile", body, config);
+    return this.httpClient.post<boolean>("/files/SaveFile", body, config);
   }
 }

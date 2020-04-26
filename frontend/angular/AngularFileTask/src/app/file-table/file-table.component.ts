@@ -39,7 +39,7 @@ export class FileTableComponent implements OnInit {
         duration: 3000
       };
 
-      this.snackBar.open("Статус", result, config);
+      this.snackBar.open("Статус", result ? "OK!" : "Error!", config);
     });    
   }
   

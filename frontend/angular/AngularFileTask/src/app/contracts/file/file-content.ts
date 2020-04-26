@@ -1,5 +1,5 @@
 export class FileContent {
-    public static createInstance(content: string[][]) {
+    public static createInstance({ content }) : FileContent {
         return new FileContent(content);
     }
 
