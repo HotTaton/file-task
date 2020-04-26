@@ -3,16 +3,12 @@
 namespace FileTaskApiCore.DataContract
 {
     /// <summary>
-    /// 
+    /// Представляет содержимое файла
     /// </summary>
-    public class SaveFileViewModel 
+    public class FileContentViewModel
     {
         /// <summary>
-        /// 
-        /// </summary>
-        public string FileName { get; set; }
-        /// <summary>
-        /// 
+        /// Массив с содержимым файла
         /// </summary>
         public IEnumerable<IEnumerable<string>> Content { get; set; }
     }

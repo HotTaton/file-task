@@ -1,4 +1,5 @@
 ﻿using FileTaskApiCore.Services;
+using FileTaskApiCore.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,13 +11,14 @@ namespace FileTaskApiCore
     public class Startup
     {
         private const string ANGULAR_ALLOW_POLICY_NAME = "AngularFront";
+        private const string FILE_SERVICE_CONFIG_SECTION_NAME = "FileServiceSettings";
+
+        public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -31,6 +33,8 @@ namespace FileTaskApiCore
                         });
             });
 
+            var fileServiceSettingsSection = Configuration.GetSection(FILE_SERVICE_CONFIG_SECTION_NAME);
+            services.Configure<FileServiceSettings>(fileServiceSettingsSection);
             services.AddScoped<IFileService, FileService>();
         }
 

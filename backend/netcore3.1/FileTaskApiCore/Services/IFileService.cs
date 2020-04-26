@@ -1,33 +1,36 @@
 ﻿using FileTaskApiCore.DataContract;
-using System.Collections.Generic;
+using FileTaskApiCore.DataContract.Response;
 using System.Threading.Tasks;
 
 namespace FileTaskApiCore.Services
 {
+    /// <summary>
+    /// Сервис для работы с файлами
+    /// </summary>
     public interface IFileService
     {
         /// <summary>
-        /// 
+        /// Получает все файлы из директории по умолчанию
         /// </summary>
-        /// <returns></returns>
-        FileViewModel GetRootDirectory();
+        /// <returns>Дерево с файлами из директории по умолчанию</returns>
+        Task<Response<FileViewModel>> GetRootDirectory();
         /// <summary>
-        /// 
+        /// Получает дерево файлов по заданному пути
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        FileViewModel GetFileTree(string path);
+        /// <param name="path">Путь</param>
+        /// <returns>Дерево с файлами</returns>
+        Task<Response<FileViewModel>> GetFileTree(string path);
         /// <summary>
-        /// 
+        /// Читает данные из файла
         /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        Task<IEnumerable<IEnumerable<string>>> ReadFileData(string fileName);
+        /// <param name="fileName">Имя файла</param>
+        /// <returns>Содержимое файла</returns>
+        Task<Response<FileContentViewModel>> ReadFileData(string fileName);
         /// <summary>
-        /// 
+        /// Сохраняет данные в файл
         /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        Task<string> SaveData(SaveFileViewModel file);
+        /// <param name="file">Файл</param>
+        /// <returns>Состояние выполнения операции</returns>
+        Task<Response<bool>> SaveData(SaveFileViewModel file);
     }
 }

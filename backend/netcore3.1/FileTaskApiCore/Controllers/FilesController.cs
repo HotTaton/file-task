@@ -1,7 +1,9 @@
-﻿using FileTaskApiCore.Services;
-using FileTaskApiCore.DataContract;
+﻿using FileTaskApiCore.DataContract;
+using FileTaskApiCore.DataContract.Response;
+using FileTaskApiCore.Filters;
+using FileTaskApiCore.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FileTaskApiCore.Controllers
 {
@@ -11,30 +13,40 @@ namespace FileTaskApiCore.Controllers
     {
         private readonly IFileService _fileService;
 
-        public FilesController(IFileService fileService) => _fileService = fileService;
+        public FilesController(IFileService fileService)
+        {
+            _fileService = fileService;            
+        }
+            
 
         [HttpGet("[action]")]
-        public ActionResult<FileViewModel> RootDirectory()
+        public async Task<ActionResult<Response<FileViewModel>>> RootDirectory()
         {
-            return new JsonResult(_fileService.GetRootDirectory());
+            var result = await _fileService.GetRootDirectory();
+            return new JsonResult(result); 
         }
 
         [HttpPost("[action]")]
-        public ActionResult<FileViewModel> GetDirectory([FromBody] string directoryPath)
+        public async Task<ActionResult<Response<FileViewModel>>> GetDirectory([FromBody] string directoryPath)
         {
-            return new JsonResult(_fileService.GetFileTree(directoryPath));
+            var result = await _fileService.GetFileTree(directoryPath);
+            return new JsonResult(result);
         }
 
         [HttpPost("[action]")]
-        public ActionResult<IEnumerable<IEnumerable<string>>> OpenFile([FromBody] string filePath)
+        [FixFileName]
+        public async Task<ActionResult<Response<FileContentViewModel>>> OpenFile([FromBody] string filePath)
         {
-            return new JsonResult(_fileService.ReadFileData(filePath));
+            var result = await _fileService.ReadFileData(filePath);
+            return new JsonResult(result);
         }
 
         [HttpPost("[action]")]
-        public ActionResult<string> SaveFile([FromBody] SaveFileViewModel file)
+        [FixFileName]
+        public async Task<ActionResult<Response<bool>>> SaveFile([FromBody] SaveFileViewModel file)
         {
-            return new JsonResult(_fileService.SaveData(file));
+            var result = await _fileService.SaveData(file);
+            return new JsonResult(result);
         }
     }
 }

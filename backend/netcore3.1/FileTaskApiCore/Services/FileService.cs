@@ -1,12 +1,19 @@
 ﻿using FileTaskApiCore.DataContract;
+using FileTaskApiCore.DataContract.Response;
+using FileTaskApiCore.Settings;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FileTaskApiCore.Services
 {
+    /// <inheritdoc/>
     public class FileService : IFileService
     {
         /// <summary>
@@ -29,71 +36,89 @@ namespace FileTaskApiCore.Services
         }
 
         /// <summary>
-        /// Максимальная глубина обхода дерева каталогов
+        /// Настройки сервиса
         /// </summary>
-        private const int MAX_LOAD_DEPTH = 1;
+        private readonly FileServiceSettings _fileServiceSettings;
 
         /// <summary>
-        /// Корневой каталог для обхода
+        /// Логгер
         /// </summary>
-        private const string INITIAL_PATH_CONST = @"C:/";
+        private readonly ILogger<FileService> _logger;
 
-        /// <summary>
-        /// Разделитель
-        /// </summary>
-        private const string DELIMITER = "\t";
-
-        /// <inheritdoc/>
-        public FileViewModel GetRootDirectory()
+        public FileService(ILogger<FileService> logger, IOptions<FileServiceSettings> settings)
         {
-            return GetFileTree(INITIAL_PATH_CONST);
+            _logger = logger;
+            _fileServiceSettings = settings.Value;
         }
 
         /// <inheritdoc/>
-        public FileViewModel GetFileTree(string path)
+        public async Task<Response<FileViewModel>> GetRootDirectory()
+        {
+            return await GetFileTree(_fileServiceSettings.InitialPath);
+        }
+
+        private FileViewModel TreeBypass(DirectoryInfo rootDirectory)
         {
             var treeStack = new Stack<StackNode>();
-            var rootDirectory = new DirectoryInfo(path); //TODO: add check is directory & is exist & not system & not hidden            
-            StackNode currentNode = null;
-            FileViewModel rootItem = null, current = null;
-
             treeStack.Push(new StackNode { Item = rootDirectory });
+
+            StackNode currentNode;
+            FileViewModel rootItem = null;
 
             while (treeStack.Count > 0 && (currentNode = treeStack.Pop()) != null)
             {
                 var directory = currentNode.Item as DirectoryInfo;
+                FileViewModel current;
                 try
                 {
+                    //Создаем ноду по текущему элементу
                     current = new FileViewModel
                     {
                         IsDirectory = directory != null,
                         Name = currentNode.Item.FullName,
-                        IsExpandable = directory?.GetFileSystemInfos().Length > 0 //buffer > 0, buffer vlivat 
+                        IsExpandable = directory?.GetFileSystemInfos().Any(child => !child.Attributes.HasFlag(FileAttributes.Hidden) && !child.Attributes.HasFlag(FileAttributes.System)) ?? false
                     };
+                }
+                catch (UnauthorizedAccessException uae)
+                {
+                    _logger.LogInformation("Access denied for files in {FileName}. Skip...", currentNode.Item.FullName);
+                    continue;
                 }
                 catch (Exception e)
                 {
+                    _logger.LogWarning(e, "Unexpected error when work with file {FileName}", currentNode.Item.FullName);
                     continue;
                 }
 
-                if (directory != null && currentNode.Level <= MAX_LOAD_DEPTH)
+                //В продолжаем если текущая нода является директорией и мы не достигли предельной глубины обхода
+                if (directory != null && currentNode.Level <= _fileServiceSettings.MaxLoadDepth)
                 {
+                    //Берем все файлы из директории
                     foreach (var child in directory.GetFileSystemInfos())
                     {
                         try
                         {
-                            if ((child.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden && (child.Attributes & FileAttributes.System) != FileAttributes.System)
+                            //Проверяем их доступность
+                            if (!child.Attributes.HasFlag(FileAttributes.Hidden) && !child.Attributes.HasFlag(FileAttributes.System))
                             {
+                                //В случае если файл доступен, добавляем его в стек с увеличенным уровнем глубины, а так же проставляем родителя
                                 treeStack.Push(new StackNode { Level = currentNode.Level + 1, Item = child, Parent = current });
                             }
                         }
-                        catch (Exception e) //TODO: add check for rights or improve catch
+                        catch (SecurityException se)
                         {
+                            _logger.LogInformation("Error when work with file {FileName}. Permission {PermissionName} was in state {PermissionState}",
+                                child.FullName, se.PermissionType?.Name, se.PermissionState);
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogWarning(e, "Unexpected error when work with file {FileName}", child.FullName);
                         }
                     }
 
                 }
 
+                //В случае если мы ещё не заполнили корень, заполняем. Иначе - добавляем к дереву потомка
                 if (rootItem == null)
                 {
                     rootItem = current;
@@ -108,70 +133,128 @@ namespace FileTaskApiCore.Services
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<IEnumerable<string>>> ReadFileData(string fileName)
+        public async Task<Response<FileViewModel>> GetFileTree(string path)
         {
-            LinkedList<LinkedList<string>> result = new LinkedList<LinkedList<string>>();
-
+            
+            DirectoryInfo rootDirectory = null;
+            var result = new Response<FileViewModel>();
+            
+            //Инициализируем начальную директорию
             try
             {
-                //if (File.Exists(fileName))
+                if (string.IsNullOrWhiteSpace(path))
                 {
-                    using (StreamReader sr = new StreamReader(fileName.Trim((char)8234)))
-                    {
-                        while (!sr.EndOfStream)
-                        {
-                            var nextLine = await sr.ReadLineAsync();
+                    throw new ArgumentException("Initial path must be set!");
+                }
 
-                            if (string.IsNullOrEmpty(nextLine))
-                            {
-                                continue;
-                            }
-
-                            var data = nextLine.Split(DELIMITER);
-
-                            var newRow = new LinkedList<string>();
-
-                            foreach (var s in data)
-                            {
-                                newRow.AddLast(s);
-                            }
-
-                            result.AddLast(newRow);
-                        }
-                    }
+                if (Directory.Exists(path))
+                {
+                    rootDirectory = new DirectoryInfo(path);
+                }
+                else
+                {
+                    throw new ArgumentException("Wrong initial path parameter");
                 }
             }
             catch (Exception e)
             {
-
+                var errorMessage = "Error when reading root file {FileName}";
+                _logger.LogError(e, errorMessage, path);
+                result.AddError(errorMessage.Replace("{FileName}", path));
             }
+
+            if (!result.HasErrors)
+            {
+                var rootItem = await Task.Run(() => TreeBypass(rootDirectory));
+                result.Item = rootItem;
+            }            
 
             return result;
         }
 
         /// <inheritdoc/>
-        public async Task<string> SaveData(SaveFileViewModel file)
+        public async Task<Response<FileContentViewModel>> ReadFileData(string fileName)
         {
-            string result = "OK!";
+            var result = new Response<FileContentViewModel>() { Item = new FileContentViewModel() };
+            var fileContent = new LinkedList<LinkedList<string>>();
+
             try
             {
-                //if (File.Exists(file.FileName))
+                if (!string.IsNullOrWhiteSpace(fileName) 
+                    && File.Exists(fileName) 
+                    && File.GetAttributes(fileName).HasFlag(FileAttributes.Normal))
                 {
-                    using (StreamWriter sr = new StreamWriter(file.FileName.Trim((char)8234)))
+                    using StreamReader sr = new StreamReader(fileName);
+                    while (!sr.EndOfStream)
                     {
-                        var content = new StringBuilder();
-                        foreach (var fileRow in file.Content)
+                        var nextLine = await sr.ReadLineAsync();
+
+                        if (string.IsNullOrEmpty(nextLine))
                         {
-                            content.AppendLine(string.Join(DELIMITER, fileRow));
+                            continue;
                         }
 
-                        await sr.WriteAsync(content.ToString());
+                        var data = nextLine.Split(_fileServiceSettings.FileDelimeter);
+
+                        var newRow = new LinkedList<string>();
+
+                        foreach (var s in data)
+                        {
+                            newRow.AddLast(s);
+                        }
+
+                        fileContent.AddLast(newRow);
                     }
+                }
+                else
+                {
+                    throw new ArgumentException("Wrong file path!");
                 }
             }
             catch (Exception e)
             {
-                result = "Error!";
+                var errorMessage = "Error when reading file {FileName}";
+                _logger.LogError(e, errorMessage, fileName);
+                result.AddError(errorMessage.Replace("{FileName}", fileName));
+            }
+
+            result.Item.Content = fileContent;
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public async Task<Response<bool>> SaveData(SaveFileViewModel file)
+        {
+            var result = new Response<bool> { Item = true };
+
+            try
+            {
+                if (file != null 
+                    && !string.IsNullOrWhiteSpace(file.FileName) 
+                    && File.Exists(file.FileName) 
+                    && File.GetAttributes(file.FileName).HasFlag(FileAttributes.Normal))                
+                {
+                    using StreamWriter sr = new StreamWriter(file.FileName);
+                    var content = new StringBuilder();
+                    foreach (var fileRow in file.Content)
+                    {
+                        content.AppendLine(string.Join(_fileServiceSettings.FileDelimeter, fileRow));
+                    }
+
+                    await sr.WriteAsync(content.ToString());
+                }
+                else
+                {
+                    throw new ArgumentException("Wrong file chosen!");
+                }
+            }
+            catch (Exception e)
+            {
+                var errorMessage = "Error when writing file {FileName}";
+                _logger.LogError(e, errorMessage, file.FileName);
+                result.AddError(errorMessage.Replace(errorMessage, file.FileName));
+                result.Item = false;
             }
 
             return result;
