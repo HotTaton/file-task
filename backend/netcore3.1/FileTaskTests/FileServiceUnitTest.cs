@@ -26,6 +26,14 @@ namespace FileTaskTests
             }
         }
 
+        /// <summary>
+        /// Проверяет постоение дерева
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="settings"></param>
+        /// <param name="files"></param>
+        /// <param name="expected"></param>
+        /// <returns></returns>
         [Theory]
         [MemberData(nameof(TestDataGenerator.GetFileTreeData), MemberType = typeof(TestDataGenerator))]
         public async Task GetFileTree(string filePath, FakeOptions<FileServiceSettings> settings, ICollection<string> files, FileViewModel expected)
@@ -49,6 +57,13 @@ namespace FileTaskTests
             }
         }
 
+        /// <summary>
+        /// Проверяет чтение из файла
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="settings"></param>
+        /// <param name="expected"></param>
+        /// <returns></returns>
         [Theory]
         [MemberData(nameof(TestDataGenerator.GetFileData), MemberType = typeof(TestDataGenerator))]
         public async Task ReadFile(string filePath, FakeOptions<FileServiceSettings> settings, IEnumerable<IEnumerable<string>> expected)
