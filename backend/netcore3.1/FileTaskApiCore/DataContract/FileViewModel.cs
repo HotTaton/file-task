@@ -38,12 +38,14 @@ namespace FileTaskApiCore.DataContract
         /// Метод добавления потомка к текущему узлу
         /// </summary>
         /// <param name="child">Потомок</param>
-        public void AddChild(FileViewModel child)
+        public FileViewModel AddChild(FileViewModel child)
         {
             if (child != null)
             {
                 ChildNodes.Add(child);
             }
+
+            return this;
         }
 
         /// <summary>
